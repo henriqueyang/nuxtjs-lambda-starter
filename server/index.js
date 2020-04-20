@@ -1,36 +1,36 @@
+// const path = require('path')
 const { Nuxt, Builder } = require('nuxt')
 const fastify = require('fastify')({
-  logger: true
+  logger: true,
 })
-
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
-config.dev = process.env.NODE_ENV !== 'production'
+config.dev = require.main === module
+// Instantiate nuxt.js
+const nuxt = new Nuxt(config)
 
-async function start() {
-  // Instantiate nuxt.js
-  const nuxt = new Nuxt(config)
+fastify.use(nuxt.render)
 
-  const {
-    host = process.env.HOST || '127.0.0.1',
-    port = process.env.PORT || 3000
-  } = nuxt.options.server
-
-  await nuxt.ready()
+if (require.main === module) {
+  nuxt.ready()
   // Build only in dev mode
-  if (config.dev) {
-    const builder = new Builder(nuxt)
-    await builder.build()
-  }
+  const builder = new Builder(nuxt)
+  builder.build()
 
-  fastify.use(nuxt.render)
-
-  fastify.listen(port, host, (err, address) => {
-    if (err) {
-      fastify.log.error(err)
-      process.exit(1)
+  fastify.listen(
+    process.env.PORT || 3000,
+    process.env.HOST || '127.0.0.1',
+    (err, address) => {
+      if (err) {
+        fastify.log.error(err)
+        process.exit(1)
+      }
     }
-  })
+  )
+} else {
+  exports.server = async () => {
+    await nuxt.ready()
+    await fastify.ready()
+    return fastify
+  }
 }
-
-start()

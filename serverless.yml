@@ -1,0 +1,31 @@
+service: nuxtnameapp
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  deploymentBucket:
+    name: nuxtbucketname
+
+plugins:
+  - serverless-apigw-binary
+
+custom:
+  apigwBinary:
+    types:
+      - '*/*'
+
+package:
+  exclude:
+    - pages/**
+    - layouts/**
+    - store/**
+
+functions:
+  nuxtnameapp:
+    handler: server/lambda.handler
+    environment:
+      bucket: nuxtbucketname
+    events:
+      - http: ANY /
+      - http: ANY /{proxy+}
