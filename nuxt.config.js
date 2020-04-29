@@ -33,7 +33,7 @@ module.exports = {
    */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    process.env.NODE_ENV !== 'production' ? '@nuxtjs/eslint-module' : '',
+    process.env.NODE_ENV === 'development' ? '@nuxtjs/eslint-module' : '',
   ].filter(Boolean),
   /*
    ** Nuxt.js modules

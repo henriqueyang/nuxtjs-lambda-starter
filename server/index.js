@@ -5,14 +5,14 @@ const fastify = require('fastify')({
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
 config.dev = require.main === module
+
 // Instantiate nuxt.js
 const nuxt = new Nuxt(config)
-
-fastify.use(nuxt.render)
 
 if (require.main === module) {
   ;(async () => {
     await nuxt.ready()
+    fastify.use(nuxt.render)
     // Build only in dev mode
     const builder = new Builder(nuxt)
     builder.build()
@@ -31,6 +31,7 @@ if (require.main === module) {
 } else {
   exports.server = async () => {
     await nuxt.ready()
+    fastify.use(nuxt.render)
     await fastify.ready()
     return fastify
   }

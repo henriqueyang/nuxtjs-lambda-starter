@@ -4,8 +4,11 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: us-east-1
+  stage: prod
   deploymentBucket:
     name: nuxtbucketname
+  environment:
+    NODE_ENV: production
 
 plugins:
   - serverless-apigw-binary
@@ -14,6 +17,12 @@ custom:
   apigwBinary:
     types:
       - '*/*'
+
+package:
+  exclude:
+    - pages/**
+    - layouts/**
+    - store/**
 
 functions:
   fastifynuxt:

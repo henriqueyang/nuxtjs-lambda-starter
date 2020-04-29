@@ -3,7 +3,7 @@
     <div>
       <logo />
       <h1 class="title">
-        fastify
+        Lambda Serverless
       </h1>
       <h2 class="subtitle">
         My wicked Nuxt.js project
